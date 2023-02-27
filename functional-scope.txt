@@ -1,0 +1,28 @@
+1. Store the page information
+2. Store meta tags
+3. Screenshot of the page -> the model will take this image as one element of learning
+4. Retrieve all the HTML Semantic elements
+
+    - Header
+    - Navbar
+    - Article
+    - Form
+    - Input
+    - Buttons
+    - Video
+    - Image
+    - Icon
+    - Links with class btn
+    - h1, h2, h3, h4, h5, h6
+    - p
+
+5. Retrive all the classes
+6. Retrieve the innerHTML
+
+
+Additional
+Map the components on the screenshot.
+
+    - Identify the X/Y coordinates of each components, plus create the bonding box (calculate widht and height?)
+    - Trace the bounding box with a bordereder overlay on top of the screenshot
+    - Save the screenshot
