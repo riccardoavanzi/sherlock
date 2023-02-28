@@ -26,6 +26,15 @@ async function screenshotWithElements(url) {
     await elements[i].evaluate((element) => {
 
       element.style.border = '2px solid red';
+      // Select all elements with the same position
+      const overlappingElements = document.querySelectorAll(`[style*="position: ${element.style.position}; top: ${element.style.top}; left: ${element.style.left};"]`);
+
+      // Create a diagonal offset for each overlapping label
+      const diagonalOffset = 15;
+      const index = Array.from(overlappingElements).indexOf(element);
+      const diagonalPosition = `translate(${index * diagonalOffset}px, ${index * diagonalOffset}px)`;
+
+      // Create the label and apply the diagonal position
       const label = document.createElement('div');
       label.textContent = element.tagName.toLowerCase();
       label.style.position = 'absolute';
@@ -34,9 +43,19 @@ async function screenshotWithElements(url) {
       label.style.backgroundColor = 'red';
       label.style.color = 'white';
       label.style.padding = '2px';
-      label.style.fontSize = '12px';
-      element.appendChild(label);
+      label.style.fontSize = '8px';
+      label.style.zIndex = '9999';
+      label.style.transform = diagonalPosition; // Apply the diagonal offset
 
+      // Add the label to the parent element
+      const parent = element.parentElement;
+      parent.style.position = 'relative';
+      parent.appendChild(label);
+
+      // Update the lastLabelTop and lastLabelHeight variables
+      lastLabelTop = parseInt(label.style.top);
+      lastLabelHeight = label.getBoundingClientRect().height;
+      
       const boxModel = window.getComputedStyle(element, null);
       const padding = boxModel.padding.split(' ').join('px, ') + 'px';
       const margin = boxModel.margin.split(' ').join('px, ') + 'px';
@@ -53,7 +72,7 @@ async function screenshotWithElements(url) {
       paddingHighlight.style.height = `calc(100% - ${padding})`;
       paddingHighlight.style.zIndex = '9999';
       element.appendChild(paddingHighlight);
-
+    
       const marginHighlight = document.createElement('div');
       marginHighlight.style.position = 'absolute';
       marginHighlight.style.top = '50%';
@@ -67,7 +86,6 @@ async function screenshotWithElements(url) {
       marginHighlight.style.zIndex = '9999';
       element.insertBefore(marginHighlight, element.firstChild);
       
-      const parent = element.parentElement;
       if (parent.tagName.toLowerCase() !== 'body') {
         parent.style.border = '2px solid #96EBD1';
       }
@@ -84,4 +102,4 @@ async function screenshotWithElements(url) {
   await browser.close();
 }
 
-screenshotWithElements('https://www.docker.com/');
+screenshotWithElements('https://form.antdv.com/');
